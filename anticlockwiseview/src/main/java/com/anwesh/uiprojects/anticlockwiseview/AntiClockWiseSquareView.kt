@@ -15,11 +15,12 @@ import android.graphics.Color
 val nodes : Int = 5
 val lines : Int = 3
 val scGap : Float = 0.05f
-val scDiv : Double = 0.05
+val scDiv : Double = 0.51
 val strokeFactor : Int = 90
 val sizeFactor : Float = 2.9f
 val foreColor : Int = Color.parseColor("#673AB7")
 val backColor : Int = Color.parseColor("#BDBDBD")
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
@@ -57,14 +58,14 @@ fun Canvas.drawACWSNode(i : Int, scale : Float, paint : Paint) {
     save()
     translate(w / 2, gap * (i + 1))
     rotate(90f * sc2)
-    drawLine(-x, y, 2 * x, y, paint)
+    drawLine(-x, y, x, y, paint)
     for (j in 0..(lines - 1)) {
         val sc : Float = sc1.divideScale(j, lines)
-        totalDeg += deg * Math.floor(sc.toDouble()).toFloat()
         save()
         rotate(totalDeg)
-        drawAnticlockWiseLine(-x, y, rotDeg, sc, paint)
+        drawAnticlockWiseLine(x, y, rotDeg, sc, paint)
         restore()
+        totalDeg += deg * Math.floor(sc.toDouble()).toFloat()
     }
     restore()
 }
@@ -113,7 +114,7 @@ class AntiClockWiseSquareView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
 
