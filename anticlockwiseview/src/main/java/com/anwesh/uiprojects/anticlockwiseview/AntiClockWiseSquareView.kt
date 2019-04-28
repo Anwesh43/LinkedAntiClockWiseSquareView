@@ -201,4 +201,26 @@ class AntiClockWiseSquareView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : AntiClockWiseSquareView) {
+
+        private val animator : Animator = Animator(view)
+        private val acws : AntiClockWiseSquare = AntiClockWiseSquare(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            acws.draw(canvas, paint)
+            animator.animate {
+                acws.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            acws.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
